@@ -40,7 +40,7 @@ function checkmulfiles {
 function downloadIGenomes {
 
 LINK="ftp://igenome:G3nom3s4u@ussd-ftp.illumina.com/Homo_sapiens/${1}/${2}/Homo_sapiens_${1}_${2}.tar.gz"
-curl --cookie /tmp/cookie.txt --cookie-jar /tmp/cookie.txt $LINK -o Homo_sapiens_${1}_${2}.tar.gz
+curl -L --cookie /tmp/cookie.txt --cookie-jar /tmp/cookie.txt $LINK -o Homo_sapiens_${1}_${2}.tar.gz
 checkfile Homo_sapiens_${1}_${2}.tar.gz
 
 dir="Homo_sapiens/${1}/${2}/Sequence/WholeGenomeFasta"
@@ -124,8 +124,8 @@ case $1 in
 		cd ./dbSNP_VCF
 		mkdir -p ./NCBI_GRCh38
 		cd ./NCBI_GRCh38
-		curl -o common_all_20160527.vcf.gz -C - ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b147_GRCh38p2/VCF/GATK/common_all_20160527.vcf.gz
-		curl -o common_all_20160527.vcf.gz.tbi -C - ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b147_GRCh38p2/VCF/GATK/common_all_20160527.vcf.gz.tbi
+		curl -L -o common_all_20160527.vcf.gz -C - ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b147_GRCh38p2/VCF/GATK/common_all_20160527.vcf.gz
+		curl -L -o common_all_20160527.vcf.gz.tbi -C - ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b147_GRCh38p2/VCF/GATK/common_all_20160527.vcf.gz.tbi
 		checkfile common_all_20160527.vcf.gz
 		checkfile common_all_20160527.vcf.gz.tbi
 		rm ${2}/BRB_SeqTools_autosetup_reference_genome_files/Homo_sapiens_NCBI_GRCh38.tar.gz
