@@ -40,7 +40,7 @@ function checkmulfiles {
 function downloadIGenomes {
 
 LINK="ftp://igenome:G3nom3s4u@ussd-ftp.illumina.com/Homo_sapiens/${1}/${2}/Homo_sapiens_${1}_${2}.tar.gz"
-wget -c --load-cookie /tmp/cookie.txt --save-cookie /tmp/cookie.txt $LINK -O Homo_sapiens_${1}_${2}.tar.gz 2>&1 | tee -a "wget_log.txt"
+wget --load-cookie /tmp/cookie.txt --save-cookie /tmp/cookie.txt $LINK -O Homo_sapiens_${1}_${2}.tar.gz 2>&1 | tee -a "wget_log.txt"
 checkfile Homo_sapiens_${1}_${2}.tar.gz
 
 dir="Homo_sapiens/${1}/${2}/Sequence/WholeGenomeFasta"
@@ -120,7 +120,7 @@ case $1 in
 		;;
 	"NCBI_GRCh38")
 		cd ./BRB_SeqTools_autosetup_reference_genome_files
-		(downloadIGenomes NCBI GRCh38) #2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
+		#(downloadIGenomes NCBI GRCh38) #2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
 		cd ./dbSNP_VCF
 		mkdir -p ./NCBI_GRCh38
 		cd ./NCBI_GRCh38
