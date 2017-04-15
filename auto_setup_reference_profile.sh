@@ -92,7 +92,7 @@ echo "Bowtie2 pre-built index files have been downloaded successfully."
 
 }
 
-
+(echo Step 1; date) | sed 'N;s/\n/ /'
 echo $1
 echo $2
 echo $PWD
@@ -113,21 +113,26 @@ case $1 in
 		mkdir -p ./Ensembl_GRCh37
 		cd ./Ensembl_GRCh37
 		(wget -c -O common_all_20160601.vcf.gz ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b147_GRCh37p13/VCF/common_all_20160601.vcf.gz) 2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
+		(echo Step 2; date) | sed 'N;s/\n/ /'
 		(wget -c -O common_all_20160601.vcf.gz.tbi ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b147_GRCh37p13/VCF/common_all_20160601.vcf.gz.tbi) 2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
+		(echo Step 3; date) | sed 'N;s/\n/ /'
 		(checkfile common_all_20160601.vcf.gz) 
 		(checkfile common_all_20160601.vcf.gz.tbi) 
 		rm ${2}/BRB_SeqTools_autosetup_reference_genome_files/Homo_sapiens_Ensembl_GRCh37.tar.gz
 		;;
 	"NCBI_GRCh38")
 		cd ./BRB_SeqTools_autosetup_reference_genome_files
-		downloadIGenomes NCBI GRCh38
 		cd ./dbSNP_VCF
 		mkdir -p ./NCBI_GRCh38
 		cd ./NCBI_GRCh38
-		curl -L -o common_all_20160527.vcf.gz -C - ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b147_GRCh38p2/VCF/GATK/common_all_20160527.vcf.gz
 		curl -L -o common_all_20160527.vcf.gz.tbi -C - ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b147_GRCh38p2/VCF/GATK/common_all_20160527.vcf.gz.tbi
+		(echo Step 2; date) | sed 'N;s/\n/ /'
+		curl -L -o common_all_20160527.vcf.gz -C - ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b147_GRCh38p2/VCF/GATK/common_all_20160527.vcf.gz
 		checkfile common_all_20160527.vcf.gz
 		checkfile common_all_20160527.vcf.gz.tbi
+		cd ../..
+		(echo Step 3; date) | sed 'N;s/\n/ /'
+		downloadIGenomes NCBI GRCh38
 		rm ${2}/BRB_SeqTools_autosetup_reference_genome_files/Homo_sapiens_NCBI_GRCh38.tar.gz
 		;;
 	"UCSC_hg38")
@@ -155,4 +160,5 @@ case $1 in
 		rm ${2}/BRB_SeqTools_autosetup_reference_genome_files/Homo_sapiens_UCSC_hg19.tar.gz
 		;;
 esac
+(echo Step 4; date) | sed 'N;s/\n/ /'
 
