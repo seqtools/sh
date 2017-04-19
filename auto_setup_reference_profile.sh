@@ -38,9 +38,9 @@ function checkmulfiles {
 }
 
 function downloadIGenomes {
-
+(echo Step 4 iGenome; date) | sed 'N;s/\n/ /'
 LINK="ftp://igenome:G3nom3s4u@ussd-ftp.illumina.com/Homo_sapiens/${1}/${2}/Homo_sapiens_${1}_${2}.tar.gz"
-wget -c --load-cookie /tmp/cookie.txt --save-cookie /tmp/cookie.txt $LINK -O Homo_sapiens_${1}_${2}.tar.gz 2>&1 | tee -a "wget_log.txt"
+curl -L --cookie /tmp/cookie.txt --cookie-jar /tmp/cookie.txt $LINK -o Homo_sapiens_${1}_${2}.tar.gz 2>&1 | tee -a "wget_log.txt"
 checkfile Homo_sapiens_${1}_${2}.tar.gz
 
 dir="Homo_sapiens/${1}/${2}/Sequence/WholeGenomeFasta"
@@ -92,7 +92,7 @@ echo "Bowtie2 pre-built index files have been downloaded successfully."
 
 }
 
-
+(echo Step 1 Start; date) | sed 'N;s/\n/ /'
 echo $1
 echo $2
 echo $PWD
@@ -108,51 +108,63 @@ mkdir -p ./BRB_SeqTools_autosetup_reference_genome_files/dbSNP_VCF
 case $1 in
 	"Ensembl_GRCh37") 
 		cd ./BRB_SeqTools_autosetup_reference_genome_files
-		(downloadIGenomes Ensembl GRCh37) #2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
 		cd ./dbSNP_VCF
 		mkdir -p ./Ensembl_GRCh37
 		cd ./Ensembl_GRCh37
-		(wget -c -O common_all_20160601.vcf.gz ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b147_GRCh37p13/VCF/common_all_20160601.vcf.gz) 2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
-		(wget -c -O common_all_20160601.vcf.gz.tbi ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b147_GRCh37p13/VCF/common_all_20160601.vcf.gz.tbi) 2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
+		(echo Step 2 dbSNP_tbi; date) | sed 'N;s/\n/ /'
+		(curl -L -o common_all_20160601.vcf.gz.tbi -C - ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b147_GRCh37p13/VCF/common_all_20160601.vcf.gz.tbi) 2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
+		(echo Step 3 dbSNP_vcf; date) | sed 'N;s/\n/ /'
+		(curl -L -o common_all_20160601.vcf.gz -C - ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b147_GRCh37p13/VCF/common_all_20160601.vcf.gz) 2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
 		(checkfile common_all_20160601.vcf.gz) 
 		(checkfile common_all_20160601.vcf.gz.tbi) 
+		cd ../..
+		(downloadIGenomes Ensembl GRCh37) #2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
 		rm ${2}/BRB_SeqTools_autosetup_reference_genome_files/Homo_sapiens_Ensembl_GRCh37.tar.gz
 		;;
 	"NCBI_GRCh38")
 		cd ./BRB_SeqTools_autosetup_reference_genome_files
-		(downloadIGenomes NCBI GRCh38) #2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
 		cd ./dbSNP_VCF
 		mkdir -p ./NCBI_GRCh38
 		cd ./NCBI_GRCh38
-		(wget -c -O common_all_20160527.vcf.gz ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b147_GRCh38p2/VCF/GATK/common_all_20160527.vcf.gz) 2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
-		(wget -c -O common_all_20160527.vcf.gz.tbi ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b147_GRCh38p2/VCF/GATK/common_all_20160527.vcf.gz.tbi) 2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
+		(echo Step 2 dbSNP_tbi; date) | sed 'N;s/\n/ /'
+		(curl -L -o common_all_20160527.vcf.gz.tbi -C - ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b147_GRCh38p2/VCF/GATK/common_all_20160527.vcf.gz.tbi) 2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
+		(echo Step 3 dbSNP_vcf; date) | sed 'N;s/\n/ /'
+		(curl -L -o common_all_20160527.vcf.gz -C - ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b147_GRCh38p2/VCF/GATK/common_all_20160527.vcf.gz) 2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
 		(checkfile common_all_20160527.vcf.gz) 
 		(checkfile common_all_20160527.vcf.gz.tbi) 
+		cd ../..
+		(downloadIGenomes NCBI GRCh38) #2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
 		rm ${2}/BRB_SeqTools_autosetup_reference_genome_files/Homo_sapiens_NCBI_GRCh38.tar.gz
 		;;
 	"UCSC_hg38")
 		cd ./BRB_SeqTools_autosetup_reference_genome_files
-		(downloadIGenomes UCSC hg38) #2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
 		cd ./dbSNP_VCF
 		mkdir -p ./UCSC_hg38
 		cd ./UCSC_hg38
-		(wget -c -O common_all_20160527.vcf.gz ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b147_GRCh38p2/VCF/GATK/common_all_20160527.vcf.gz) 2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
-		(wget -c -O common_all_20160527.vcf.gz.tbi ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b147_GRCh38p2/VCF/GATK/common_all_20160527.vcf.gz.tbi) 2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
+		(echo Step 2 dbSNP_tbi; date) | sed 'N;s/\n/ /'
+		(curl -L -o common_all_20160527.vcf.gz.tbi -C - ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b147_GRCh38p2/VCF/GATK/common_all_20160527.vcf.gz.tbi) 2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
+		(echo Step 3 dbSNP_vcf; date) | sed 'N;s/\n/ /'
+		(curl -L -o common_all_20160527.vcf.gz -C - ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b147_GRCh38p2/VCF/GATK/common_all_20160527.vcf.gz) 2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
 		(checkfile common_all_20160527.vcf.gz) 
 		(checkfile common_all_20160527.vcf.gz.tbi)
+		cd ../..
+		(downloadIGenomes UCSC hg38) #2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
 		rm ${2}/BRB_SeqTools_autosetup_reference_genome_files/Homo_sapiens_UCSC_hg38.tar.gz
 		;;
 	"UCSC_hg19") 
 		cd ./BRB_SeqTools_autosetup_reference_genome_files		
-		(downloadIGenomes UCSC hg19) #2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
 		cd ./dbSNP_VCF
 		mkdir -p ./UCSC_hg19
 		cd ./UCSC_hg19
-		(wget -c -O common_all_20160601.vcf.gz ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b147_GRCh37p13/VCF/GATK/common_all_20160601.vcf.gz) 2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
-		(wget -c -O common_all_20160601.vcf.gz.tbi ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b147_GRCh37p13/VCF/GATK/common_all_20160601.vcf.gz.tbi) 2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
+		(echo Step 2 dbSNP_tbi; date) | sed 'N;s/\n/ /'
+		(curl -L -o common_all_20160601.vcf.gz.tbi -C - ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b147_GRCh37p13/VCF/GATK/common_all_20160601.vcf.gz.tbi) 2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
+		(echo Step 3 dbSNP_vcf; date) | sed 'N;s/\n/ /'
+		(curl -L -o common_all_20160601.vcf.gz -C - ftp://ftp.ncbi.nih.gov/snp/organisms/human_9606_b147_GRCh37p13/VCF/GATK/common_all_20160601.vcf.gz) 2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
 		(checkfile common_all_20160601.vcf.gz) 
 		(checkfile common_all_20160601.vcf.gz.tbi) 
+		cd ../..
+		(downloadIGenomes UCSC hg19) #2>&1 | tee -a "$2/BRB_SeqTools_autosetup_reference_genome_files/wget_log.txt"
 		rm ${2}/BRB_SeqTools_autosetup_reference_genome_files/Homo_sapiens_UCSC_hg19.tar.gz
 		;;
 esac
-
+(echo Step 5 Finish; date) | sed 'N;s/\n/ /'
