@@ -39,6 +39,57 @@ function checkmulfiles {
 
 function downloadIGenomes {
 (echo Step 4 iGenome; date) | sed 'N;s/\n/ /'
+LINK="ftp://igenome:G3nom3s4u@ussd-ftp.illumina.com/Homo_sapiens/${1}/${2}/Homo_sapiens_${1}_${2}.tar.gz"
+wget --load-cookie /tmp/cookie.txt --save-cookie /tmp/cookie.txt $LINK -O Homo_sapiens_${1}_${2}.tar.gz
+checkfile Homo_sapiens_${1}_${2}.tar.gz
+
+dir="Homo_sapiens/${1}/${2}/Sequence/WholeGenomeFasta"
+if [ ! -d $dir ]; then mkdir -p $dir; fi;
+cp -RLp ~/.avfs"$PWD/Homo_sapiens_${1}_${2}.tar.gz#"/$dir/{genome.fa,genome.fa.fai,genome.dict,GenomeSize.xml} $PWD/$dir
+checkfile $PWD/$dir/genome.fa
+checkfile $PWD/$dir/genome.fa.fai
+checkfile $PWD/$dir/genome.dict
+checkfile $PWD/$dir/GenomeSize.xml
+echo "genome reference files have been downloaded successfully."
+
+if [ ${2} == "GRCh37" ]; then
+	dir="Homo_sapiens/${1}/${2}/Annotation/Archives/archive-2015-07-17-14-31-42/Genes"
+fi
+
+if [ ${2} == "GRCh38" ]; then
+	dir="Homo_sapiens/${1}/${2}/Annotation/Archives/archive-2015-08-11-09-31-31/Genes"
+fi
+
+if [ ${2} == "hg19" ]; then
+	dir="Homo_sapiens/${1}/${2}/Annotation/Archives/archive-2015-07-17-14-32-32/Genes"
+fi
+
+if [ ${2} == "hg38" ]; then
+	dir="Homo_sapiens/${1}/${2}/Annotation/Archives/archive-2015-08-14-08-18-15/Genes"
+fi
+dirGene="Homo_sapiens/${1}/${2}/Annotation/Genes"
+if [ ! -d $dirGene ]; then mkdir -p $dirGene; fi;
+cp -RLp ~/.avfs"$PWD/Homo_sapiens_${1}_${2}.tar.gz#"/$dir/genes.gtf $PWD/$dirGene
+checkfile $PWD/$dirGene/genes.gtf
+echo "genes.gtf has been downloaded successfully."
+
+dir="Homo_sapiens/${1}/${2}/Sequence/BWAIndex/version0.6.0"
+dirBWA="Homo_sapiens/${1}/${2}/Sequence/BWAIndex"
+if [ ! -d $dirBWA ]; then mkdir -p $dirBWA; fi;
+cp -RLp ~/.avfs"$PWD/Homo_sapiens_${1}_${2}.tar.gz#"/$dir/{genome.fa.bwt,genome.fa.ann,genome.fa.amb,genome.fa.pac,genome.fa.sa} $PWD/$dirBWA
+checkfile $PWD/$dirBWA/genome.fa.bwt
+checkfile $PWD/$dirBWA/genome.fa.ann
+checkfile $PWD/$dirBWA/genome.fa.amb
+checkfile $PWD/$dirBWA/genome.fa.pac
+checkfile $PWD/$dirBWA/genome.fa.sa
+echo "BWA pre-built index files have been downloaded successfully."
+
+dir="Homo_sapiens/${1}/${2}/Sequence/Bowtie2Index"
+if [ ! -d $dir ]; then mkdir -p $dir; fi;
+cp -RLp ~/.avfs"$PWD/Homo_sapiens_${1}_${2}.tar.gz#"/$dir/*.bt2 $PWD/$dir
+checkmulfiles $PWD/$dir *.bt2
+echo "Bowtie2 pre-built index files have been downloaded successfully."
+
 }
 
 (echo Step 1 Start; date) | sed 'N;s/\n/ /'
@@ -82,7 +133,7 @@ case $1 in
 		(checkfile common_all_20160527.vcf.gz.tbi) 
 		cd ../..
 		(downloadIGenomes NCBI GRCh38)
-		#rm ${2}/BRB_SeqTools_autosetup_reference_genome_files/Homo_sapiens_NCBI_GRCh38.tar.gz
+		rm ${2}/BRB_SeqTools_autosetup_reference_genome_files/Homo_sapiens_NCBI_GRCh38.tar.gz
 		;;
 	"UCSC_hg38")
 		cd ./BRB_SeqTools_autosetup_reference_genome_files
