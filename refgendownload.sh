@@ -40,7 +40,7 @@ function checkmulfiles {
 function downloadIGenomes {
 (echo Step 4 iGenome; date) | sed 'N;s/\n/ /'
 LINK="ftp://igenome:G3nom3s4u@ussd-ftp.illumina.com/Homo_sapiens/${1}/${2}/Homo_sapiens_${1}_${2}.tar.gz"
-wget --load-cookie /tmp/cookie.txt --save-cookie /tmp/cookie.txt $LINK -O Homo_sapiens_${1}_${2}.tar.gz
+#wget --load-cookie /tmp/cookie.txt --save-cookie /tmp/cookie.txt $LINK -O Homo_sapiens_${1}_${2}.tar.gz
 checkfile Homo_sapiens_${1}_${2}.tar.gz
 
 dir="Homo_sapiens/${1}/${2}/Sequence/WholeGenomeFasta"
@@ -132,7 +132,7 @@ case $1 in
 		(checkfile common_all_20160527.vcf.gz) 
 		(checkfile common_all_20160527.vcf.gz.tbi) 
 		cd ../..
-		#(downloadIGenomes NCBI GRCh38)
+		(downloadIGenomes NCBI GRCh38)
 		rm ${2}/BRB_SeqTools_autosetup_reference_genome_files/Homo_sapiens_NCBI_GRCh38.tar.gz
 		;;
 	"UCSC_hg38")
