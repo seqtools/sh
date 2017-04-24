@@ -132,7 +132,7 @@ case $1 in
 		(checkfile common_all_20160527.vcf.gz) 
 		(checkfile common_all_20160527.vcf.gz.tbi) 
 		cd ../..
-		(downloadIGenomes NCBI GRCh38)
+		#(downloadIGenomes NCBI GRCh38)
 		rm ${2}/BRB_SeqTools_autosetup_reference_genome_files/Homo_sapiens_NCBI_GRCh38.tar.gz
 		;;
 	"UCSC_hg38")
