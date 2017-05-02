@@ -45,7 +45,8 @@ checkfile Homo_sapiens_${1}_${2}.tar.gz
 
 dir="Homo_sapiens/${1}/${2}/Sequence/WholeGenomeFasta"
 if [ ! -d $dir ]; then mkdir -p $dir; fi;
-cp -RLp ~/.avfs"$PWD/Homo_sapiens_${1}_${2}.tar.gz#"/$dir/{genome.fa,genome.fa.fai,genome.dict,GenomeSize.xml} $PWD/$dir
+tar -xvf $PWD/Homo_sapiens_${1}_${2}.tar.gz $dir/genome.fa $dir/genome.fa.fai $dir/genome.dict $dir/GenomeSize.xml
+#cp -RLp ~/.avfs"$PWD/Homo_sapiens_${1}_${2}.tar.gz#"/$dir/{genome.fa,genome.fa.fai,genome.dict,GenomeSize.xml} $PWD/$dir
 checkfile $PWD/$dir/genome.fa
 checkfile $PWD/$dir/genome.fa.fai
 checkfile $PWD/$dir/genome.dict
@@ -69,14 +70,20 @@ if [ ${2} == "hg38" ]; then
 fi
 dirGene="Homo_sapiens/${1}/${2}/Annotation/Genes"
 if [ ! -d $dirGene ]; then mkdir -p $dirGene; fi;
-cp -RLp ~/.avfs"$PWD/Homo_sapiens_${1}_${2}.tar.gz#"/$dir/genes.gtf $PWD/$dirGene
+tar -xvf $PWD/Homo_sapiens_${1}_${2}.tar.gz $dir/genes.gtf
+mv $PWD/$dir/genes.gtf $PWD/$dirGene/
+rm -r -f $PWD/Homo_sapiens/${1}/${2}/Annotation/Archives
+#cp -RLp ~/.avfs"$PWD/Homo_sapiens_${1}_${2}.tar.gz#"/$dir/genes.gtf $PWD/$dirGene
 checkfile $PWD/$dirGene/genes.gtf
 echo "genes.gtf has been downloaded successfully."
 
 dir="Homo_sapiens/${1}/${2}/Sequence/BWAIndex/version0.6.0"
 dirBWA="Homo_sapiens/${1}/${2}/Sequence/BWAIndex"
 if [ ! -d $dirBWA ]; then mkdir -p $dirBWA; fi;
-cp -RLp ~/.avfs"$PWD/Homo_sapiens_${1}_${2}.tar.gz#"/$dir/{genome.fa.bwt,genome.fa.ann,genome.fa.amb,genome.fa.pac,genome.fa.sa} $PWD/$dirBWA
+tar -xvf $PWD/Homo_sapiens_${1}_${2}.tar.gz $dir/genome.fa.bwt $dir/genome.fa.ann $dir/genome.fa.amb $dir/genome.fa.pac $dir/genome.fa.sa
+mv $dir/* $dir/..
+rm -r -f $dir
+#cp -RLp ~/.avfs"$PWD/Homo_sapiens_${1}_${2}.tar.gz#"/$dir/{genome.fa.bwt,genome.fa.ann,genome.fa.amb,genome.fa.pac,genome.fa.sa} $PWD/$dirBWA
 checkfile $PWD/$dirBWA/genome.fa.bwt
 checkfile $PWD/$dirBWA/genome.fa.ann
 checkfile $PWD/$dirBWA/genome.fa.amb
@@ -86,7 +93,8 @@ echo "BWA pre-built index files have been downloaded successfully."
 
 dir="Homo_sapiens/${1}/${2}/Sequence/Bowtie2Index"
 if [ ! -d $dir ]; then mkdir -p $dir; fi;
-cp -RLp ~/.avfs"$PWD/Homo_sapiens_${1}_${2}.tar.gz#"/$dir/*.bt2 $PWD/$dir
+tar -xvf $PWD/Homo_sapiens_${1}_${2}.tar.gz $dir/*.bt2
+#cp -RLp ~/.avfs"$PWD/Homo_sapiens_${1}_${2}.tar.gz#"/$dir/*.bt2 $PWD/$dir
 checkmulfiles $PWD/$dir *.bt2
 echo "Bowtie2 pre-built index files have been downloaded successfully."
 
@@ -97,7 +105,7 @@ echo $1
 echo $2
 echo $PWD
 
-mountavfs
+#mountavfs
 
 cd $2
 
